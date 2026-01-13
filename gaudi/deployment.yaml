@@ -13,7 +13,7 @@ spec:
       labels:
         app: gaudi3hpc
     spec:
-      runtimeClassName: habana
+      #runtimeClassName: habana
       tolerations:
       - key: "gaudi"
         operator: "Equal"
