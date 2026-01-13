@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld
+  name: gaudi3
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -21,7 +21,7 @@ spec:
         effect: "NoSchedule"
       containers:
       - image: gaudi-opt:1.0
-        name: gaudi3-1.23
+        name: gaudi3-1-23
         command:
         - ./mininstall.sh 
         securityContext:
