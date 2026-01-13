@@ -20,10 +20,11 @@ spec:
         value: "worker24"
         effect: "NoSchedule"
       containers:
-      - image: gaudi-opt:1.0
+      - image: gaudi-opt-ready:1.0
         name: gaudi3-1-23
         command:
-        - ./mininstall.sh 
+        - /usr/sbin/sshd
+        - -D
         securityContext:
           privileged: true
         volumeMounts:
