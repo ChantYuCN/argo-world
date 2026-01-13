@@ -38,6 +38,8 @@ spec:
           mountPath: /dev
         - name: udev
           mountPath: /run/udev
+        ports:
+        - containerPort: 22
       volumes:
       - name: sys
         hostPath:
@@ -59,4 +61,5 @@ spec:
         hostPath:
           path: /run/udev
           type: DirectoryOrCreate
+---
 
