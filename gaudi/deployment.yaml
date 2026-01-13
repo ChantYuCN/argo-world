@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gaudi3hpc
+  template:
+    metadata:
+      labels:
+        app: gaudi3hpc
+    spec:
+      runtimeClassName: habana
+      tolerations:
+      - key: "gaudi"
+        operator: "Equal"
+        value: "worker24"
+        effect: "NoSchedule"
+      containers:
+      - image: gaudi-opt:1.0
+        name: gaudi3-1.23
+        command:
+        - ./mininstall.sh 
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: sys
+          mountPath: /sys 
+        - name: module
+          mountPath: /lib/modules
+        - name: firmware
+          mountPath: /lib/firmware
+        - name: dev
+          mountPath: /dev
+        - name: udev
+          mountPath: /run/udev
+      volumes:
+      - name: sys
+        hostPath:
+          path: /sys
+          type: DirectoryOrCreate
+      - name: module
+        hostPath:
+          path: /lib/modules
+          type: DirectoryOrCreate
+      - name: firmware
+        hostPath:
+          path: /lib/firmware
+          type: DirectoryOrCreate
+      - name: dev
+        hostPath:
+          path: /dev
+          type: DirectoryOrCreate
+      - name: udev
+        hostPath:
+          path: /run/udev
+          type: DirectoryOrCreate
+
