@@ -24,3 +24,6 @@ spec:
         command:
         - echo
         - "Hello World"
+        - &&
+        - sleep
+        - infinity
