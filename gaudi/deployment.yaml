@@ -62,4 +62,43 @@ spec:
           path: /run/udev
           type: DirectoryOrCreate
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaudi3tpc
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gaudi3tpc
+  template:
+    metadata:
+      labels:
+        app: gaudi3tpc
+    spec:
+      #runtimeClassName: habana
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      containers:
+      - image: gaudi-hlsa-ready:1.0
+        name: gaudi3-1-23-hlsa
+        command:
+        - sleep
+        - infinity
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /dev
+        ports:
+        - containerPort: 22
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+          type: DirectoryOrCreate
 
