@@ -1,0 +1,34 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: gaudi-workflow-
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+  annotations:
+    workflows.argoproj.io/description: |
+      A TPC demo workflow.
+  namespace: argo
+spec:
+  entrypoint: hlsa-flow
+  tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+  templates:
+  - name: hlsa-flow
+    dag:
+      tasks:
+      - name: test-information
+        templateRef:
+          name: hl-sa-cwf
+          template: hl-sa-test-information
+          clusterScope: true
+      - name: test-pci-link-spec
+        dependencies: [test-information]
+        templateRef:
+          name: hl-sa-cwf
+          template: hl-sa-test-pci-link-spec
+          clusterScope: true
+
