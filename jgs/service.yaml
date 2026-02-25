@@ -1,0 +1,12 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jgs-ssh
+spec:
+  ports:
+  - port: 22
+    targetPort: 22
+  selector:
+    app: jgshpc
+

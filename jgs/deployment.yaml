@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jgsdeploy
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: jgshpc
+  template:
+    metadata:
+      labels:
+        app: jgshpc
+    spec:
+      #runtimeClassName: habana
+      tolerations:
+      - key: "gaudi"
+        operator: "Equal"
+        value: "worker24"
+        effect: "NoSchedule"
+      containers:
+      - image: gaudi-opt-ready:1.0
+        name: gaudi3-1-23
+        command:
+        - /usr/sbin/sshd
+        - -D
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: sys
+          mountPath: /sys 
+        - name: module
+          mountPath: /lib/modules
+        - name: firmware
+          mountPath: /lib/firmware
+        - name: dev
+          mountPath: /dev
+        - name: udev
+          mountPath: /run/udev
+        ports:
+        - containerPort: 22
+      volumes:
+      - name: sys
+        hostPath:
+          path: /sys
+          type: DirectoryOrCreate
+      - name: module
+        hostPath:
+          path: /lib/modules
+          type: DirectoryOrCreate
+      - name: firmware
+        hostPath:
+          path: /lib/firmware
+          type: DirectoryOrCreate
+      - name: dev
+        hostPath:
+          path: /dev
+          type: DirectoryOrCreate
+      - name: udev
+        hostPath:
+          path: /run/udev
+          type: DirectoryOrCreate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jgstpc
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: jgstpc
+  template:
+    metadata:
+      labels:
+        app: jgstpc
+    spec:
+      #runtimeClassName: habana
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      containers:
+      - image: gaudi-hlsa-ready:1.0
+        name: gaudi3-1-23-hlsa
+        command:
+        - sleep
+        - infinity
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /dev
+        ports:
+        - containerPort: 22
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+          type: DirectoryOrCreate
